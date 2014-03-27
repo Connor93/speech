@@ -1,0 +1,20 @@
+{
+  "name": "speech",
+  "version": "0.0.1",
+  "description": "module for running tts in terminal for all operating systems",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Connor Fraser",
+  "license": "BSD",
+  "optionalDependencies": {
+    "edge": "~0.7.14",
+    "say": "~0.5.0"
+  },
+  "dependencies": {
+    "commander": "~2.1.0",
+    "optimist": "~0.6.1"
+  }
+}
