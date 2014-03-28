@@ -2,10 +2,16 @@ var argv = require('optimist')
     .usage('Use voices from the operating system, to read and speak the contents of a file')    
     .demand('f')
     .alias('f', 'file')
+    .alias('v', 'voice')
     .describe('f', 'Load the contents of a file and speak them')    
+    .describe('v', 'Choose a voice different from the default voice. A list of voices is found : http://github.com/Connor93/Speech')
     .argv;
 var os = require('os');
 var fs = require('fs');
+var _ = require('underscore');
+
+//These should only be used on mac / linux
+var voices = [ 'Agnes', 'Kathy', 'Princess', 'Vicki', 'Victoria', 'Albert', 'Alex', 'Bruce', 'Fred', 'Junior', 'Ralph', 'Bad News', 'Bahh', 'Bells', 'Boing', 'Bubbles', 'Cellos', 'Deranged', 'Good News', 'Hysterical', 'Pipe Organ', 'Trinoids', 'Whisper', 'Zarvox' ];
 
 var edge;
 try {
@@ -30,11 +36,12 @@ catch( e ) {
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 
-var file;
-var file = fs.createReadStream(argv.file);		
+var file = fs.createReadStream(argv.file);
+var voice = argv.voice;
+
 switch(os.type()){
-	default: //Default is going to have to be.. osx / Linux
-		speak(file);
+	default: //Default is going to have to be.. osx / Linux		
+		speak(file, voice);
 		break;
 	case "Windows_NT":		
 		windowsSpeak(file);
@@ -66,17 +73,18 @@ function windowsSpeak(file){
 		});		
 	});
 }
-
-function speak(file){
-
-	if(say == null){
+function voiceExists(voice){ return _.indexOf(voices, voice) === -1 ? false : true; }
+function speak(file, voice){
+	if(say === null){
 		console.log("say is not found, you are most likely trying to run a linux / mac command on a non linux/ mac machine");
 		return;
 	}
-	var string = "";
-	file.on('data', function (buf) { string += buf.toString(); });
-	file.on('end', function(){ 
-		//Alex is just a random name i chose, if it doesn't work.. Other names can be found .. https://github.com/marak/say.js/
-		say.speak('Alex', string);
-	});
+	if(voice === '') voice = 'Alex';	
+	if(voiceExists(voice)){
+		var string = "";
+		file.on('data', function (buf) { string += buf.toString(); });
+		file.on('end', function(){ 		
+			say.speak(voice, string);
+		});	
+	}	
 }
