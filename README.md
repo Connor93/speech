@@ -8,6 +8,9 @@ Usage
 
 node speech.js (--file / -f) your_file.txt
 
+optional flags:
+-v, --voice       Specify a voice to use.
+
 Windows will use whichever voice you have set as your default tts voice, on Osx and Linux, you can choose from a list of voices found here:
 
 https://github.com/marak/say.js/
